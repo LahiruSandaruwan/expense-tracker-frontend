@@ -1,157 +1,125 @@
-# Expense Tracker - Frontend
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-This is the frontend project for the Expense Tracker application, built using React (version 18) and bootstrapped with [Create React App](https://github.com/facebook/create-react-app). The application allows users to manage their expenses, including adding, editing, and deleting expenses. It interacts with the backend through API calls to store and retrieve data.
+<p align="center">
+<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-## Technologies and Plugins Used
+## About This Project
 
-- **React**: Version 18 (bootstrapped with Create React App)
-- **JavaScript**: For application logic
-- **React Router**: For client-side routing (`react-router-dom`)
-- **Styled Components**: For component-level styling
-- **Axios**: For making HTTP requests to the backend APIs
-- **React Toastify**: For displaying notifications and alert messages
-- **React Icons**: For using icons within the application
-- **React Confirmation Alerts**: For displaying confirmation messages (e.g., before deleting an expense)
+This is a Laravel 8 backend project for an expense tracker application. The project uses Laravel Sanctum for secure API authentication and is designed to integrate seamlessly with a frontend React application.
 
-### Installed Plugins
-- `styled-components`: For styling React components.
-- `react-toastify`: For displaying toast notifications.
-- `react-icons`: For adding attractive icons.
-- `axios`: For making HTTP requests.
-- `js-cookie`: For managing cookies, particularly for CSRF tokens and authentication.
-- `react-confirm-alert`: For confirmation alerts before actions like deleting an expense.
+### Laravel Version
+- Laravel **8**
 
-To install the necessary plugins, run:
-```bash
-npm install styled-components react-toastify react-icons axios js-cookie react-confirm-alert
-```
+### Authentication Method
+- **Laravel Sanctum**: Provides token-based authentication for API access.
 
-## Styling Methods
+## Table of Contents
+1. [Installation](#installation)
+2. [Configuration](#configuration)
+3. [Available Endpoints](#available-endpoints)
+4. [Validation and Error Handling](#validation-and-error-handling)
+5. [Running the Project](#running-the-project)
+6. [License](#license)
 
-We are using **Styled Components** for styling the application. This approach allows us to create styled React components with a scoped CSS-in-JS approach, making our components modular and easy to manage.
+## Installation
 
-## Validation Methods
+To set up the project locally, follow these steps:
 
-We implemented custom validation for input fields:
-- **Title Field**: Only accepts letters (no numbers allowed).
-- **Form Validation**: Ensures all required fields are filled out correctly before submission.
-- **Backend Validation Handling**: If a validation error occurs (e.g., duplicate title), it is captured and displayed using **React Toastify**.
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/LahiruSandaruwan/expense-tracker-backend.git
+   ```
 
-### Example:
-```javascript
-<Input
-    type="text"
-    value={title}
-    onChange={(e) => {
-        const value = e.target.value;
-        if (/^[a-zA-Z\s]*$/.test(value)) { // Only allow letters and spaces
-            setTitle(value);
-        }
-    }}
-    required
-/>
-```
+2. **Navigate to the project directory**:
+   ```bash
+   cd expense-tracker-backend
+   ```
 
-## Services and API Integration
+3. **Install dependencies**:
+   ```bash
+   composer install
+   ```
 
-### API Communication
-- **Axios** is used for making HTTP requests to the backend API. The API calls include:
-  - Fetching expenses
-  - Adding an expense
-  - Updating an expense
-  - Deleting an expense
+4. **Copy the `.env.example` file to create your environment file**:
+   ```bash
+   cp .env.example .env
+   ```
 
-- We have a separate `api.js` file where all API-related functions are defined for modularity and reusability. The functions are designed to handle API responses, errors, and CSRF tokens using `js-cookie` for Laravel Sanctum.
+5. **Generate an application key**:
+   ```bash
+   php artisan key:generate
+   ```
 
-### CSRF Token Initialization
-We use `axios` instances for handling CSRF tokens with Laravel Sanctum, ensuring secure API requests.
+6. **Set up your database**:
+   - Update your `.env` file with your database credentials:
+     ```env
+     DB_CONNECTION=mysql
+     DB_HOST=127.0.0.1
+     DB_PORT=3306
+     DB_DATABASE=your_database_name
+     DB_USERNAME=your_database_user
+     DB_PASSWORD=your_database_password
+     ```
 
-### Authentication
-- Authorization token management (`Bearer token`) is set up using `setAuthToken()` function, ensuring the frontend is authenticated before making requests.
+7. **Run the database migrations**:
+   ```bash
+   php artisan migrate
+   ```
 
-### Confirmation Alerts
-- We use **React Confirmation Alerts** (`react-confirm-alert`) for actions like deleting an expense. Users are prompted with a confirmation message before deletion to prevent accidental actions.
+8. **Install Laravel Sanctum**:
+   ```bash
+   composer require laravel/sanctum
+   ```
 
-## Features
+9. **Publish Sanctum configuration**:
+   ```bash
+   php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+   ```
 
-- **Expense Management**: Add, edit, delete expenses with form validation and toast notifications.
-- **Authentication**: Users must be authenticated to access the dashboard. If unauthenticated, they are redirected to the login page with an alert.
-- **API Error Handling**: Friendly toast notifications display when API errors occur, such as network errors or validation failures.
-- **Data Fetching**: Data is fetched and displayed dynamically from the backend API, and the UI updates based on API responses.
-- **Confirmation Prompts**: Before deleting an expense, the user is shown a confirmation alert using **React Confirmation Alerts**.
+## Configuration
+
+- **CSRF Token Handling**: The frontend application must fetch the CSRF token from `/sanctum/csrf-cookie` before making any API requests.
+- **API Middleware**: Sanctum middleware is added to API routes to ensure only authenticated users can access the endpoints.
+
+## Available Endpoints
+
+The API provides the following routes:
+
+### Authentication Routes
+- **POST** `/login`: Logs in the user and returns a token.
+- **POST** `/register`: Registers a new user.
+- **POST** `/logout`: Logs out the authenticated user.
+
+### Expense Routes
+- **GET** `/api/expenses`: Fetches all expenses for the authenticated user.
+- **POST** `/api/expenses`: Adds a new expense (title must be unique per user).
+- **PUT** `/api/expenses/{id}`: Updates an existing expense.
+- **DELETE** `/api/expenses/{id}`: Deletes an expense.
+
+## Validation and Error Handling
+
+- **Unique Title Validation**: The backend validates that each expense title is unique for each user. If a duplicate title is detected, a `422 Unprocessable Entity` error is returned with a message.
+- **Error Handling**: All validation errors return JSON responses with appropriate HTTP status codes (e.g., `401 Unauthorized` for unauthenticated access).
 
 ## Running the Project
 
-### Prerequisites
-- Node.js and npm should be installed on your system.
+To run the backend locally:
 
-### Install Dependencies
-Run the following command in the project directory to install all required dependencies:
-```bash
-npm install
+1. **Serve the application**:
+   ```bash
+   php artisan serve
+   ```
+   The application will run on [http://127.0.0.1:8000](http://127.0.0.1:8000) by default.
+
+## License
+
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 ```
 
-### Running the Development Server
-To start the development server, run:
-```bash
-npm start
-```
-This will start the application in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-### Building for Production
-To build the app for production, run:
-```bash
-npm run build
-```
-This will create a `build` folder with the production-ready code.
-
-## Folder Structure
-
-```plaintext
-expense-tracker-frontend/
-├── public/
-├── src/
-│   ├── components/
-│   │   ├── Navbar.js
-│   │   ├── ExpenseForm.js
-    |   ├── EditExpense.js
-│   │   └── ExpenseList.js
-│   ├── pages/
-│   │   ├── Dashboard.js
-│   │   ├── Register.js
-│   │   └── Login.js
-│   ├── services/
-│   │   └── api.js
-│   ├── App.js
-│   ├── index.js
-│   └── App.css
-└── package.json
-```
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-Runs the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-### `npm test`
-Launches the test runner in the interactive watch mode.
-
-### `npm run build`
-Builds the app for production, creating a `build` directory.
-
-### `npm run eject`
-Ejects the application configuration. **Warning**: This action is irreversible.
-
-## Notes
-- Make sure the backend server is running and accessible at the specified API base URL (`http://localhost:8000/api`) for the frontend to interact with the API.
-- **Environment Variables**: You can set up `.env` files to manage environment-specific settings like API URLs or feature flags.
-
-## Learn More
-
-To learn more about React and Create React App:
-- [React Documentation](https://reactjs.org/)
-- [Create React App Documentation](https://facebook.github.io/create-react-app/docs/getting-started)
-
-Feel free to customize and expand the project based on your needs. If you have any questions, refer to the documentation links provided.
+### Additional Notes:
+- Replace the **GitHub repository URL** in the `git clone` command with the actual URL of your repository.
+- Ensure that your `.env` settings match your local environment.
